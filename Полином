@@ -1,0 +1,166 @@
+package com.company;
+
+public class Main {
+
+    public static void main(String[] args) {
+        double c = 10;
+        double[] n = new double[8];
+        n[0] = 1;
+        n[1] = 0;
+        n[2] = 0;
+        n[3] = 0;
+        n[4] = -98;
+        n[5] = 0;
+        n[6] = 3;
+        n[7] = 0;
+        PolynomLag A = new PolynomLag(n);
+        System.out.println( "Первый полином " + A);
+
+        double[] d = new double[8];
+        d[0] = 78;
+        d[1] = -2;
+        d[2] = 9;
+        d[3] = 2;
+        d[4] = -45;
+        d[5] = -9;
+        d[6] = 56;
+        d[7] = 0;
+        PolynomLag B = new PolynomLag(d);
+        System.out.println("Второй полином" + B);
+
+
+        PolynomLag addition = PolynomLag.addition(A, B);
+        System.out.println(addition);
+
+
+        PolynomLag mult = PolynomLag.mult(A, B);
+        System.out.println(mult);
+
+
+
+        PolynomLag multcoef =  PolynomLag.multcoef(B, c);
+        System.out.println(multcoef);
+
+        PolynomLag div = PolynomLag.div(B, c);
+        System.out.println(div);
+
+
+
+
+
+
+
+
+
+
+
+
+    }
+}
+
+
+package com.company;
+
+class PolynomLag {
+
+
+    double[] coef;
+
+    public PolynomLag(double[] coef) {
+
+        this.coef = coef;
+    }
+    public int getlength() {
+        return coef.length;
+    }
+
+
+    @Override
+    public String toString() {
+        String result = "";
+        if (coef[0] < 0){
+            coef[0] = -1 * coef[0];
+            result = "" + " - " + coef[0];
+            coef[0] = -1*coef[0];
+        } else if (coef[0] == 0) {
+            result = "";
+        } else result = "" + " + " + coef[0];
+
+
+        if ((coef.length >= 2) & (coef[1] == 0)) {
+            result = "" + result;
+        } else if ((coef.length >= 2) & (coef[1] == 1)) {
+            result = "" + " + " + "x " + result;
+        } else if ((coef.length >= 2) & (coef[1] == -1)) {
+            result = " " + "x " + result;
+        } else if ((coef.length >= 2) & ((coef[1] != -1) || (coef[1] != 1)) & (coef[1] <= 0)) {
+            coef[1] = -1 * coef[1];
+            result = "" + " - " + coef[1] + "x " + result;
+            coef[1] = -1 * coef[1];
+        } else result = " " + " + " + coef[1] + "x " + result;
+
+        for (int i = 2; i < coef.length; i++) {
+            if (coef[i] == 0) {
+                result = "" + result;
+            } else if ((coef[i] < 0) & (coef[i] != -1)) {
+                coef[i] = -1 * coef[i];
+                result = "" + " - " + coef[i] + "x^" + i + result;
+                coef[i] = -1 * coef[i];
+            } else if ((coef[i] < 0) & (coef[i] == -1)) {
+                result = "" + " - " + "x^" + i + result;
+            } else if ((coef[i] > 0) & (coef[i] == 1)) {
+                result = "" + " + " + "x^" + i + result;
+            } else result = "" + " + " + coef[i] + "x^" + i + result;
+
+        }
+        return result;
+
+    }
+
+
+
+    public static PolynomLag addition(PolynomLag B, PolynomLag A) {
+
+        double[] m = new double[A.coef.length];
+        for(int i = 0; i < m.length; i++){
+            m[i] = A.coef[i] + B.coef[i];
+        }
+        return new PolynomLag(m);
+
+    }
+    public static PolynomLag mult(PolynomLag B, PolynomLag A) {
+        int rez = B.getlength() + A.getlength() - 1;
+        double[] result = new double[rez];
+        for (int i = 0; i < B.getlength(); i++) {
+            for (int j = 0; j < B.getlength(); j++) {
+                result[i + j] += B.coef[i] * A.coef[j];
+            }
+        }
+        return new PolynomLag(result);
+    }
+    public static PolynomLag multcoef(PolynomLag B, double c) {
+        double[] m = new double[B.coef.length];
+        for (int i = 0; i < m.length; i++) {
+            m[i] = B.coef[i] * c;
+        }
+        return new PolynomLag(m);
+
+    }
+
+    public static PolynomLag div(PolynomLag B, double c) {
+        double[] m = new double[B.coef.length];
+        for (int i = 0; i < m.length; i++) {
+            m[i] = B.coef[i] * (1/c);
+        }
+
+        return new PolynomLag(m);
+
+    }
+
+
+
+
+
+
+
+}
